@@ -1,0 +1,39 @@
+version: "3.7"
+
+services:
+  backend:
+    build:
+      context: backend
+      dockerfile: Dockerfile
+    image: momo-backend
+    container_name: momo-backend
+    restart: unless-stopped
+    expose:
+      - "8081"
+    ports:
+      - "8081"
+    environment:
+      VIRTUAL_HOST: backend
+    networks:
+      - momo-store 
+
+  frontend:
+    build:
+      context: frontend
+      dockerfile: Dockerfile
+    image: momo-frontend
+    container_name: momo-frontend
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+    environment:
+      DEFAULT_HOST: backend
+      
+    networks:
+      - momo-store
+
+
+networks:
+  momo-store:

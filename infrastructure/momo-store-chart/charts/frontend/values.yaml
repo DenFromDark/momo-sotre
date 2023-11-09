@@ -1,0 +1,6 @@
+replicas: 1
+revisionHistoryLimit: 15
+
+image:
+  repository: gitlab.praktikum-services.ru:5050/d.ponizovskiy/momo-store/momo-frontend
+  tag: "latest"

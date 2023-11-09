@@ -1,0 +1,11 @@
+global:
+  environment: production
+  backend:
+    port: 8081
+  frontend:
+    port: 80
+  fqdn: "momo-store.lightstandart.com"
+
+ingress:
+  className: "nginx"
+  host: momo-store.lightstandart.com

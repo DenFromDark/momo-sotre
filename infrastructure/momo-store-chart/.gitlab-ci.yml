@@ -1,0 +1,14 @@
+stages:
+  - release
+
+variables:
+  CHART_VERSION: 0.1.${CI_PIPELINE_IID}
+
+release-helm-chart:
+  stage: release
+  image: alpine/helm:3.10.0
+  script:
+    - cd infrastructure/momo-store-chart
+    - helm package . --version=${CHART_VERSION}
+    - ls -alh
+    - curl -u ${NEXUS_REPO_USER}:${NEXUS_REPO_PASS} ${NEXUS_REPO_URL} --upload-file momo-store-${CHART_VERSION}.tgz -vvv

@@ -1,0 +1,12 @@
+apiVersion: v2
+appVersion: latest
+name: momo-store
+type: application
+version: 0.1.0
+description: Momo Store Helm chart for Kubernetes
+
+dependencies:
+- name: backend
+  version: 0.1.0
+- name: frontend
+  version: 0.1.0

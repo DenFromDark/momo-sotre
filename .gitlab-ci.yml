@@ -1,0 +1,58 @@
+stages:
+  - module-pipelines
+  - deploy
+
+frontend:
+  stage: module-pipelines
+  trigger:
+    include:
+      - "/frontend/.gitlab-ci.yml"
+    strategy: depend
+  only:
+    changes:
+      - frontend/**/*
+
+backend:
+  stage: module-pipelines
+  trigger:
+    include:
+      - "/backend/.gitlab-ci.yml"
+    strategy: depend
+  only:
+    changes:
+      - backend/**/*
+
+charts:
+  stage: module-pipelines
+  trigger:
+    include:
+      - "/infrastructure/momo-store-chart/.gitlab-ci.yml"
+    strategy: depend
+  only:
+    changes:
+      - infrastructure/momo-store-chart/**/*
+
+
+deploy-to-prod:
+  stage: deploy
+  image: alpine/helm:3.10.0
+
+  when: manual
+  #rules:
+  #  - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+  #    when: manual
+  #  - if: '$CI_COMMIT_BRANCH == "main"'
+  #    when: manual
+  
+  before_script:
+    - mkdir -p ~/.kube
+    - chmod 600 ~/.kube
+    - echo "$KUBECONFIG" > ~/.kube/config
+    - cat ~/.kube/config
+    - chmod 600 ~/.kube/config
+    - ls -alh ~/.kube
+  
+  script:
+    - cd infrastructure/momo-store-chart
+    - helm upgrade --install --atomic momo-store .
+    - rm ~/.kube/config
